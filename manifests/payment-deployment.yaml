@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  payment-backend
+  template:
+    metadata:
+      labels:
+        app:  payment-backend
+    spec:
+      containers:
+        - name: eks-petfriends
+          image: 811288377093.dkr.ecr.us-west-2.amazonaws.com/payment-backend:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+          env:
+            - name: DATE
+              value: 'DATE_STRING'
