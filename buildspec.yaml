@@ -1,0 +1,41 @@
+# buildspec.yaml
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+    commands:
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.20.4/2021-04-12/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mv ./kubectl /usr/local/bin/kubectl
+      - mkdir ~/.kube
+      #- aws eks --region ap-northeast-2 update-kubeconfig --name eks
+      - aws eks update-kubeconfig --name eks-petfriends --region us-west-2
+      - kubectl get po -n kube-system
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/
+  build:
+    commands:
+      - echo Build Starting on `date`
+      #- echo Building with maven...
+      #- mvn clean install -Dmaven.test.skip=true
+      #- ./gradlew build
+      - echo Building the Docker image
+      - docker build -t $IMAGE_REPO_NAME:latest .
+      #- docker tag $IMAGE_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$CODEBUILD_BUILD_NUMBER
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$CODEBUILD_BUILD_NUMBER
+
+  post_build:
+    commands:
+      - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$CODEBUILD_BUILD_NUMBER
+      - DATE='date'
+      - echo Build completed on $DATE
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./payment-deployment.yaml
+      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./payment-deployment.yaml
+      - kubectl apply -f ./payment-deployment.yaml
+      - kubectl apply -f ./payment-service.yaml
+      #- kubectl apply -f ./payment-ingress.yaml
