@@ -1,17 +1,24 @@
 ---------------------------------------------------
 1. maria 설치 및 테이블 생성(예제에는 id/passwd : root/1234 , 변경은 application.yml에서 하면 됨. )
 ---------------------------------------------------
-테이블스페이스 : petfriends
+테이블스페이스 : create database petfriends;
 
-테이블생성 Script: CREATE TABLE payment (   
-  pay_id BIGINT(20) NOT NULL DEFAULT '0',   
-  reserved_id VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',   
-  user_id VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',   
-  amount DOUBLE NULL DEFAULT NULL,   
-  pay_date TIMESTAMP NULL DEFAULT NULL,   
-  refund_date TIMESTAMP NULL DEFAULT NULL ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB ;  
-
-insert샘플: insert into payment (amount, pay_date, refund_date, reserved_id, user_id) values (10000, '2022-03-10 19:22:33.102', null, '22021','soyapayment95');  
+CREATE TABLE reservation (
+id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+start_time DATETIME NULL DEFAULT NULL,
+end_time DATETIME NULL DEFAULT NULL,
+amount DOUBLE NULL DEFAULT NULL,
+status INT(20) NOT NULL DEFAULT '1',
+dogwalker_schedule_id BIGINT(20) NOT NULL,
+user_id NVARCHAR(50) NOT NULL,
+user_nm NVARCHAR(50) NOT NULL,
+reg_time DATETIME NOT NULL DEFAULT NOW(),
+upd_time DATETIME NOT NULL DEFAULT NOW()
+) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB ;
+ 
+insert샘플:
+insert into reservation (start_time, end_time, amount, status, dogwalker_schedule_id, user_id, user_nm) 
+values ("2022-03-10 19:00:00", "2022-03-10 21:00:00", 40000, 1, 10001, "geny_id", "geny");
 
 ---------------------------------------------------  
 2. kafka설치  

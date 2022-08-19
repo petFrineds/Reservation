@@ -1,18 +1,16 @@
 package petfriends;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import petfriends.config.KafkaProcessor;
-import petfriends.payment.dto.OrderCancelled;
-import petfriends.payment.repository.PaymentRepository;
-
-import java.util.List;
-
+import petfriends.external.Payed;
+import petfriends.external.WalkEnded;
+import petfriends.external.WalkStarted;
+import petfriends.reservation.model.Reservation;
+import petfriends.reservation.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class PolicyHandler{
@@ -22,24 +20,40 @@ public class PolicyHandler{
     }
     
     @Autowired
-    PaymentRepository paymentRepository;
+    ReservationRepository reservationRepository;
 
+    // 상태변경
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverOrderCancelled_(@Payload OrderCancelled orderCancelled){
-
-    	if(orderCancelled.isMe()){
-            System.out.println("##### listener  : " + orderCancelled.toJson());
-            
-            //List<Payment> list = paymentRepository.findByOrderId(orderCancelled.getId()); // mariadb  추가하면서 주석
-            
-            //for(Payment payment : list){
-            	// payment.setCancelYn("Y"); // 테이블 변경하면서 주석처리 2202.06.27
-                // view 객체에 이벤트의 eventDirectValue 를 set 함
-                // view 레파지 토리에 save
-            //	paymentRepository.save(payment);
-            //}
-            
+    public void wheneverPayed_(@Payload Payed payed)
+    {
+        if(payed.isMe()){
+            Optional<Reservation> reservationOptional = reservationRepository.findById(payed.getReservedId());
+            Reservation reservation = reservationOptional.get();
+            reservation.setStatus(5); // 예약취소
+            reservationRepository.save(reservation);
         }
     }
 
+    // 산책 시작
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverWalkStarted_(@Payload WalkStarted walkStarted)
+    {
+        if(walkStarted.isMe()){
+            Optional<Reservation> reservationOptional = reservationRepository.findById(walkStarted.getReservedId());
+            Reservation reservation = reservationOptional.get();
+            reservation.setStatus(3); // 산책시작
+            reservationRepository.save(reservation);
+        }
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverWalkEnded_(@Payload WalkEnded walkEnded)
+    {
+        if(walkEnded.isMe()){
+            Optional<Reservation> reservationOptional = reservationRepository.findById(walkEnded.getReservedId());
+            Reservation reservation = reservationOptional.get();
+            reservation.setStatus(4); // 산책종료
+            reservationRepository.save(reservation);
+        }
+    }
 }

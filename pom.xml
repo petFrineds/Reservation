@@ -9,18 +9,18 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>petfriends</groupId>
-	<artifactId>Payment</artifactId>
+	<artifactId>Reservation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Payment</name>
+	<name>Reservation</name>
 	<description>Demo project for Spring Boot</description>
 
-	
+
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
 		<spring-cloud-stream.version>Germantown.SR1</spring-cloud-stream.version>
 	</properties>
-	
+
 	<!--
 	<properties>
 		<java.version>11</java.version>
@@ -30,7 +30,7 @@
 		<spring-cloud-stream.version>Germantown.SR1</spring-cloud-stream.version>
 	</properties>
 	-->
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -40,7 +40,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
-		<!-- 
+		<!--
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -78,7 +78,11 @@
 		    <artifactId>mariadb-java-client</artifactId>
 		    <version>3.0.5</version>
 		</dependency>
-
+        <dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
