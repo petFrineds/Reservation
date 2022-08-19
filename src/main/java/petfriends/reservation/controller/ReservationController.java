@@ -20,8 +20,14 @@ import javax.validation.Valid;
 
 	 @Autowired
 	ReservationRepository reservationRepository;
-	 
-	 @GetMapping("/reservation/{id}")
+
+
+	@GetMapping("/reservation")
+	public List<Reservation> findAll() {
+		return reservationService.findAll();
+	}
+
+	@GetMapping("/reservation/{id}")
 	 public Reservation findById(@PathVariable("id") Long id) {
 		 return reservationService.findById(id);
 	 }
@@ -68,21 +74,6 @@ import javax.validation.Valid;
 
 		 return reservation;
 	}
-//	@PutMapping("/payments/{id}")
-//	public Payment refund(@PathVariable Long id) {
-//		return paymentService.refund(id);
-//	}
-//
-//	@GetMapping("/points/users/{userId}")
-//	public List<Point> findPointAllByUserId(@PathVariable("userId") String userId) {
-//		return paymentService.findPointAllByUserId(userId);
-//	}
-
-
-//	 @PostMapping("/reservation")
-//	 public Reservation save(){
-//
-//	 }
  }
 
  

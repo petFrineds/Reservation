@@ -1,28 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-backend
+  name: reservation-backend
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: payment-backend
+      app: reservation-backend
   template:
     metadata:
       labels:
-        app: payment-backend
+        app: reservation-backend
     spec:
       containers:
-        - name: payment-backend
-          image: 811288377093.dkr.ecr.us-west-2.amazonaws.com/payment-backend:latest
+        - name: reservation-backend
+          image: 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
             - name: DATE
               value: 'DATE_STRING'
-          env:   # Setting Enviornmental Variables
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom :
                 configMapKeyRef :

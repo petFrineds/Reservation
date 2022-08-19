@@ -107,6 +107,8 @@ server:
 
 api:
   url:
-    payment: http://payment:8080
+    payment: http://payment-backend:8080
+    walk: http://walk-backend:8080
+    dogwalkerSchedule: http://dogwalkerSchedule-backend:8080
 
 

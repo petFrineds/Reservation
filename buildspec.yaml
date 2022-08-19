@@ -34,8 +34,7 @@ phases:
       - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$CODEBUILD_BUILD_NUMBER
       - DATE='date'
       - echo Build completed on $DATE
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./manifests/payment-deployment.yaml
-      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./manifests/payment-deployment.yaml
-      - kubectl apply -f ./manifests/payment-deployment.yaml
-      - kubectl apply -f ./manifests/payment-service.yaml
-      #- kubectl apply -f ./payment-ingress.yaml
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./manifests/reservation-deployment.yaml
+      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./manifests/reservation-deployment.yaml
+      - kubectl apply -f ./manifests/reservation-deployment.yaml
+      - kubectl apply -f ./manifests/reservation-service.yaml

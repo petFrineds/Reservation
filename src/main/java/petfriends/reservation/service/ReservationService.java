@@ -14,7 +14,12 @@ public class ReservationService {
 	 
 	 @Autowired
 	 ReservationRepository reservationRepository;
-	 
+
+
+	 public List<Reservation> findAll(){
+
+		 return reservationRepository.findAll();
+	 }
 	 public Reservation findById(Long id) {
 
 		 if(reservationRepository.findById(id).isPresent()) {
