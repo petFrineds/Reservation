@@ -22,23 +22,23 @@ import javax.validation.Valid;
 	ReservationRepository reservationRepository;
 
 
-	@GetMapping("/reservation")
+	@GetMapping("/reservations")
 	public List<Reservation> findAll() {
 		return reservationService.findAll();
 	}
 
-	@GetMapping("/reservation/{id}")
+	@GetMapping("/reservations/{id}")
 	 public Reservation findById(@PathVariable("id") Long id) {
 		 return reservationService.findById(id);
 	 }
 
-	 @GetMapping("/reservation/users/{userId}")
+	 @GetMapping("/reservations/users/{userId}")
 	 public List<Reservation> findAllByUserId(@PathVariable("userId") String userId) {
 		 return reservationService.findAllByUserId(userId);
 	 }
 
 
-	@PostMapping("/reservation")
+	@PostMapping("/reservations")
 	public Reservation reserve(@Valid @RequestBody Reservation reservation) {
 
 		 // 기본 - 요청중 상태
@@ -49,7 +49,7 @@ import javax.validation.Valid;
 	}
 
 
-	@PatchMapping("/reservation")
+	@PatchMapping("/reservations")
 	public Reservation update(@Valid @RequestBody Reservation reservation){
 
 		Optional<Reservation> temp;

@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: reservation-backend
   annotations:
-    alb.ingress.kubernetes.io/healthcheck-path: "/reservation"
+    alb.ingress.kubernetes.io/healthcheck-path: "/reservations"
 spec:
   selector:
     app:  reservation-backend
