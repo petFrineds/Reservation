@@ -3,6 +3,8 @@
 ---------------------------------------------------
 테이블스페이스 : create database petfriends;
 
+mariadb 5.5 버전에서는 TIMESTAMP를 한 컬럼만 사용이 가능하고 NOW() 함수를 쓸수가 없다.... 
+
 CREATE TABLE reservation (
 id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 start_time DATETIME NULL DEFAULT NULL,
@@ -12,18 +14,24 @@ status INT(20) NOT NULL DEFAULT '1',
 dogwalker_schedule_id BIGINT(20) NOT NULL,
 user_id NVARCHAR(50) NOT NULL,
 user_nm NVARCHAR(50) NOT NULL,
-reg_time DATETIME NOT NULL DEFAULT NOW(),
-upd_time DATETIME NOT NULL DEFAULT NOW()
+reg_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+upd_time TIMESTAMP 
 ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB ;
  
 insert샘플:
 insert into reservation (start_time, end_time, amount, status, dogwalker_schedule_id, user_id, user_nm) 
 values ("2022-03-10 19:00:00", "2022-03-10 21:00:00", 40000, 1, 10001, "geny_id", "geny");
 
+
+
 ---------------------------------------------------  
-2. kafka설치  
+2. 배포 방법
 ---------------------------------------------------  
-참고사이트 : http://www.msaschool.io/operation/implementation/implementation-seven/  
+ec2에 reservation 테이블 만들기, 데이터 insert 
+git clone~
+create acr ~ repository
+docker build -t reservation-backend .
+docker tag reservation-backend:latest 811288377093.dkr.ecr.$AWS_REGION.amazonaws.com/reservation-backend:latest
 
 --------------------------------------------------  
 3. Payment(mariadb), Shop(hsqldb) 실행 및 테스트  
