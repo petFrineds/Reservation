@@ -2,12 +2,7 @@ server:
   port: 8080
 ---
 
-api:
-  url:
-    payment: http://localhost:8084
 
-test:
-  app: test
 
 spring:
   profiles: default
@@ -54,6 +49,9 @@ logging:
       SQL: DEBUG
     org.springframework.cloud: debug
 
+api:
+  url:
+    payment: http://localhost:8084
 
 
 ---
@@ -102,8 +100,6 @@ logging:
       type.descriptor.sql: trace #show parameter binding
       SQL: DEBUG
     org.springframework.cloud: debug
-server:
-  port: 8080
 
 api:
   url:
