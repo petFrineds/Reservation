@@ -1,22 +1,20 @@
 package petfriends.reservation.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import petfriends.ReservationApplication;
 
 import javax.persistence.*;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import petfriends.ReservationApplication;
-import petfriends.reservation.dto.Created;
-import petfriends.reservation.dto.StatusUpdated;
+import java.util.Date;
 
 @Entity
 @Table(name="reservation")
 @Slf4j
 public class Reservation {
+
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -44,6 +42,9 @@ public class Reservation {
 	@Column(name="user_nm")
 	private String userNm;
 
+    @Value("${test.app}")
+    private String test;
+
 
     @PostPersist
     public void onPostPersist(){
@@ -61,14 +62,14 @@ public class Reservation {
 //        BeanUtils.copyProperties(this, statusUpdated);
 //        statusUpdated.publishAfterCommit();
 
+
         log.info("!!!!!!!!!!!!!!!!!onPostUpdate1 --> " + this.getReservedId().toString() + " // " + this.getStatus());
+
         if(this.getStatus() == 5) { //예약취소일때
             log.info("!!!!!!!!!!!!!!!!!onPostUpdate2 --> " + this.getReservedId().toString() + " // " + this.getStatus());
             String reservedId = this.getReservedId().toString();
             ReservationApplication.applicationContext.getBean(petfriends.external.PaymentService.class)
                     .doPayment(reservedId);
-
-
         }
     }
 

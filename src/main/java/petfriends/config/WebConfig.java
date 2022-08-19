@@ -12,8 +12,8 @@ public class WebConfig implements WebMvcConfigurer{
 	public void addCorsMappings(CorsRegistry registry) {
 		// TODO Auto-generated method stub
 		WebMvcConfigurer.super.addCorsMappings(registry);
-		registry.addMapping("/**")
-		.allowedOrigins("http://localhost:3000")
+		registry.addMapping("/**/**")
+		.allowedOrigins("http://localhost:8084")
 		.allowedMethods(HttpMethod.GET.name(),
 				        HttpMethod.POST.name(),
 				        HttpMethod.PUT.name(),
