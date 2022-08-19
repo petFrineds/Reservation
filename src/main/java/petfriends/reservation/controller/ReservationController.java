@@ -13,6 +13,7 @@ import petfriends.reservation.service.ReservationService;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/")
  public class ReservationController {
 
 	 @Autowired
