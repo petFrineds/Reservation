@@ -23,7 +23,7 @@ insert into reservation (start_time, end_time, amount, status, dogwalker_schedul
 values ("2022-03-10 19:00:00", "2022-03-10 21:00:00", 40000, 1, 10001, "geny_id", "geny");
 
 
-insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values (12, 10000, '2022-03-10 19:22:33.102', null, 4 , 'soyapayment95');
+insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values (12, 10000, '2022-03-10 19:22:33.102', null, 6 , 'soyapayment95');
 
 
 ---------------------------------------------------  
