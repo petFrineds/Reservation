@@ -57,18 +57,20 @@ api:
 spring:
   profiles: docker
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver #mysql driver
-    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?useSSL=false
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${HOST_NAME}:3306/petfriends?characterEncoding=UTF-8&serverTimezone=UTC
     username: ${DB_USERNAME}
     password:
     hikari:
       initialization-fail-timeout: 0
-    jpa:
-      database-platform: org.hibernate.dialect.MySQL5Dialect
-      generate-ddl: true
-      show-sql: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
+        format_sql: true #To beautify or pretty print the SQL
+        show_sql: true #show sql
+
 
   cloud:
     stream:

@@ -23,17 +23,28 @@ insert into reservation (start_time, end_time, amount, status, dogwalker_schedul
 values ("2022-03-10 19:00:00", "2022-03-10 21:00:00", 40000, 1, 10001, "geny_id", "geny");
 
 
-insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values (12, 10000, '2022-03-10 19:22:33.102', null, 6 , 'soyapayment95');
+insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values 
+(20220212, 40000, '2022-03-10 19:22:33.102', null, 1 , 'geny_id');
 
 
 ---------------------------------------------------  
 2. 배포 방법
 ---------------------------------------------------  
 ec2에 reservation 테이블 만들기, 데이터 insert 
-git clone~
-create acr ~ repository
+git git clone https://github.com/petFrineds/Reservation.git
+mvn install
+aws ecr create-repository --repository-name reservation-backend -- image-scanning-configuration scanOnPush=true --region ${AWS_REGION}
 docker build -t reservation-backend .
 docker tag reservation-backend:latest 811288377093.dkr.ecr.$AWS_REGION.amazonaws.com/reservation-backend:latest
+docker push 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 811288377093.dkr.ecr.us-west-2.amazonaws.com/
+cd manifests
+-- 여기서 부터는 ec2-user 사용
+kubectl apply -f reservation-deployment.yaml
+kubectl get deploy
+kubectl apply -f reservation-service.yaml
+kubectl get service
+kubectl get ingress
 
 --------------------------------------------------  
 3. Payment(mariadb), Shop(hsqldb) 실행 및 테스트  
