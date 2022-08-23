@@ -1,5 +1,8 @@
 package petfriends.reservation.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +20,6 @@ public class ReservationService {
 
 
 	 public List<Reservation> findAll(){
-
 		 return reservationRepository.findAll();
 	 }
 	 public Reservation findById(Long id) {
@@ -35,7 +37,15 @@ public class ReservationService {
 	}
 
 	public Reservation save(Reservation reservation){
-		 return reservationRepository.save(reservation);
+
+		LocalDateTime current = LocalDateTime.now();
+		 if(reservation.getRegDate() == null)
+			 reservation.setRegDate( java.sql.Timestamp.valueOf(current) );
+
+		 if(reservation.getUpdDate() == null)
+			 reservation.setRegDate( java.sql.Timestamp.valueOf(current) );
+
+		return reservationRepository.save(reservation);
 	}
 
 

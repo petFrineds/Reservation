@@ -1,20 +1,23 @@
 package petfriends.reservation.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.cms.TimeStampAndCRL;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import petfriends.ReservationApplication;
+import petfriends.reservation.dto.Created;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
 @Table(name="reservation")
 @Slf4j
+@Data
 public class Reservation {
-
-
-
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -29,29 +32,42 @@ public class Reservation {
 	@Column(name = "end_time")
 	private Date endTime;
 
+    @Column(name="amount")
 	private Double amount;
 
 	@Column(name="dogwalker_schedule_id")
 	private Long dogwalkerScheduleId;
 
+    @Column(name="dogwalker_id")
+    private String dogwalkerId;
+
+    @Column(name="dogwalker_name")
+    private String dogwalkerName;
+
     @Column(name="status")
-    private Integer status; // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-예약취소
+    private ReservationStatus status; // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-포인트지급, 10-결재취소
+
 	@Column(name="user_id")
 	private String userId;
 
-	@Column(name="user_nm")
-	private String userNm;
+	@Column(name="user_name")
+	private String userName;
 
-    @Value("${test.app}")
-    private String test;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name="reg_date")
+    private Date regDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name="upd_date")
+    private Date updDate;
 
     @PostPersist
     public void onPostPersist(){
-//        Created created = new Created();
-//        BeanUtils.copyProperties(this, created);
-//        created.publishAfterCommit();
 
+        //예약 생성
+        Created created = new Created();
+        BeanUtils.copyProperties(this, created);
+        created.publishAfterCommit();
         log.info("!!!!!!!!!!!!!!!!!onPostPersist --> " + this.getReservedId().toString() + " // " + this.getStatus());
 
     }
@@ -65,80 +81,12 @@ public class Reservation {
 
         log.info("!!!!!!!!!!!!!!!!!onPostUpdate1 --> " + this.getReservedId().toString() + " // " + this.getStatus());
 
-        if(this.getStatus() == 5) { //예약취소일때
+        if(this.getStatus() == ReservationStatus.CANCEL) { //예약취소일때
             log.info("!!!!!!!!!!!!!!!!!onPostUpdate2 --> " + this.getReservedId().toString() + " // " + this.getStatus());
             String reservedId = this.getReservedId().toString();
             ReservationApplication.applicationContext.getBean(petfriends.external.PaymentService.class)
                     .doPayment(reservedId);
         }
     }
-
-
-
-
-    public Long getReservedId() {
-        return reservedId;
-    }
-
-    public void setReservedId(Long reservedId) {
-        this.reservedId = reservedId;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Long getDogwalkerScheduleId() {
-        return dogwalkerScheduleId;
-    }
-
-    public void setDogwalkerScheduleId(Long dogwalkerScheduleId) {
-        this.dogwalkerScheduleId = dogwalkerScheduleId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserNm() {
-        return userNm;
-    }
-
-    public void setUserNm(String userNm) {
-        this.userNm = userNm;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
 
 }

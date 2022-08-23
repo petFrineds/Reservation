@@ -9,18 +9,27 @@ CREATE TABLE reservation (
 id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 start_time DATETIME NULL DEFAULT NULL,
 end_time DATETIME NULL DEFAULT NULL,
+
+dogwalker_schedule_id BIGINT(20) NOT NULL,
+dogwalker_id NVARCHAR(50) NULL,
+dogwalker_name NVARCHAR(50) NULL,
+
 amount DOUBLE NULL DEFAULT NULL,
 status INT(20) NOT NULL DEFAULT '1',
-dogwalker_schedule_id BIGINT(20) NOT NULL,
+
 user_id NVARCHAR(50) NOT NULL,
-user_nm NVARCHAR(50) NOT NULL,
-reg_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-upd_time TIMESTAMP 
+user_name NVARCHAR(50) NOT NULL,
+
+reg_date DATETIME,
+upd_date DATETIME
 ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB ;
  
 insert샘플:
-insert into reservation (start_time, end_time, amount, status, dogwalker_schedule_id, user_id, user_nm) 
-values ("2022-03-10 19:00:00", "2022-03-10 21:00:00", 40000, 1, 10001, "geny_id", "geny");
+insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name) 
+values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 1, "mimi_id", "mimi",  40000, 0, "geny_id", "geny");
+
+insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name)
+values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 1, "mimi_id", "mimi",  80000, 0, "soya95", "soya");
 
 
 insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values 
@@ -34,12 +43,14 @@ ec2에 reservation 테이블 만들기, 데이터 insert
 git git clone https://github.com/petFrineds/Reservation.git
 mvn install
 aws ecr create-repository --repository-name reservation-backend -- image-scanning-configuration scanOnPush=true --region ${AWS_REGION}
-docker build -t reservation-backend .
+docker build -t reservation-backend . -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul
+docker run ... -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul ...
+
 docker tag reservation-backend:latest 811288377093.dkr.ecr.$AWS_REGION.amazonaws.com/reservation-backend:latest
 docker push 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 811288377093.dkr.ecr.us-west-2.amazonaws.com/
 cd manifests
--- 여기서 부터는 ec2-user 사용
+-- 여기서 부터는 ec2-user 사경
 kubectl apply -f reservation-deployment.yaml
 kubectl get deploy
 kubectl apply -f reservation-service.yaml

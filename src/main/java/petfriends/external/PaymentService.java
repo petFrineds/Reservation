@@ -11,7 +11,6 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 @FeignClient(name="Payment", url="${api.url.payment}")
 public interface PaymentService {
 
-
     @RequestMapping(method= RequestMethod.PUT, path="/payments/{id}")
     public void doPayment(@PathVariable String id);
 

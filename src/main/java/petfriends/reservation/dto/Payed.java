@@ -1,11 +1,7 @@
-package petfriends.external;
+package petfriends.reservation.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.data.annotation.Transient;
 import petfriends.AbstractEvent;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.sql.Timestamp;
 
 public class Payed extends AbstractEvent {

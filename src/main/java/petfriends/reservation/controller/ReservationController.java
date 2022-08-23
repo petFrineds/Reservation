@@ -1,8 +1,15 @@
 package petfriends.reservation.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import jdk.jfr.Timestamp;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.util.UriComponentsBuilder;
 import petfriends.reservation.model.Reservation;
+import petfriends.reservation.model.ReservationStatus;
 import petfriends.reservation.repository.ReservationRepository;
 import petfriends.reservation.service.ReservationService;
 
@@ -44,12 +52,6 @@ import javax.validation.Valid;
 		return new ResponseEntity<Reservation>(reservation, HttpStatus.NO_CONTENT);
 	}
 
-	/* 기존
-	 @GetMapping("/reservations/{id}")
-	 public Reservation findById(@PathVariable("id") Long id) {
-		 return reservationService.findById(id);
-	 }
-	*/
 
 	@RequestMapping(method= RequestMethod.GET, path="/reservations/users/{userId}")
 	public ResponseEntity<List<Reservation>> findAllByUserId(@PathVariable String userId){
@@ -61,19 +63,12 @@ import javax.validation.Valid;
 		return new ResponseEntity<List<Reservation>>(reservations, HttpStatus.NO_CONTENT);
 	}
 
-	/*
-	 @GetMapping("/reservations/users/{userId}")
-	 public List<Reservation> findAllByUserId(@PathVariable("userId") String userId) {
-		 return reservationService.findAllByUserId(userId);
-	 }
-	*/
-
 
 	@RequestMapping(value = "/reservations", method = RequestMethod.POST)
 	public ResponseEntity<Reservation> reserve(@RequestBody final Reservation reservation,
 											   final UriComponentsBuilder ucBuilder) {
 		if(reservation.getStatus() == null){
-			reservation.setStatus(1);
+			reservation.setStatus(ReservationStatus.REQUEST);
 		}
 
 		Reservation savedReservation = reservationService.save(reservation);
@@ -86,69 +81,40 @@ import javax.validation.Valid;
 		return new ResponseEntity<Reservation>(headers, HttpStatus.CREATED);
 	}
 
-	/*
-	 @PostMapping("/reservations")
-	 public Reservation reserve(@Valid @RequestBody Reservation reservation) {
-
-		 // 기본 - 요청중 상태
-		 if(reservation.getStatus() == null){
-			 reservation.setStatus(1);
-		 }
-		return reservationService.save(reservation);
-	 }
-	*/
-
-
-
 	@Transactional
 	@RequestMapping(value = "/reservations/{id}", method = RequestMethod.PATCH)
-	public ResponseEntity<Reservation> patchCustomer(@PathVariable("id") final Long id,
+	public ResponseEntity<Reservation> patchReservation(@PathVariable("id") final Long id,
 												  @RequestBody final Reservation reservation) {
 
 		Optional<Reservation> temp;
 
-		Integer status = reservation.getStatus();
+		ReservationStatus status = reservation.getStatus();
 		Reservation savedReservation = null;
+
 
 		if(reservationRepository.findById(reservation.getReservedId()).isPresent()) {
 			temp = reservationRepository.findById(reservation.getReservedId());
 			savedReservation = temp.get();
+		}
+
+		// 시간 변환
+		LocalDateTime currentTime = LocalDateTime.now();
+		currentTime = currentTime.minusHours(-24); // 24시간 전시간
+
+		LocalDateTime startTime = new java.sql.Timestamp( savedReservation.getStartTime().getTime() )
+				.toLocalDateTime();
+
+		if( startTime.isAfter(currentTime) )
+			return new ResponseEntity<>( savedReservation,  HttpStatus.EXPECTATION_FAILED);
+
+		else {
 			savedReservation.setStatus(status); //상태 업데이트
+			reservationService.save(savedReservation);
+			return new ResponseEntity<Reservation>(savedReservation,   HttpStatus.OK);
 		}
 
-		reservationService.save(savedReservation);
 
-		return  new ResponseEntity<Reservation>(savedReservation, HttpStatus.OK);
 	}
-
-	/*
-	 @PatchMapping("/reservations")
-	 public Reservation update(@Valid @RequestBody Reservation reservation){
-
-		Optional<Reservation> temp;
-		Integer status = reservation.getStatus();
-
-
-		if(reservationRepository.findById(reservation.getReservedId()).isPresent()) {
-			 temp = reservationRepository.findById(reservation.getReservedId());
-			 reservation = temp.get();
-			 reservation.setStatus(status); //상태 업데이트
-		}
-
-		 switch (reservation.getStatus()){
-			 // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-예약취소
-			 case 1: // 요청중
-			 case 2: // 결재완료
-			 case 3:
-			 case 4:
-			 case 5:
-				 reservationService.save(reservation);
-				 break;
-		 }
-
-		 return reservation;
-	}
-	*/
 
  }
 

@@ -1,9 +1,8 @@
 package petfriends.reservation.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import petfriends.AbstractEvent;
 
-import javax.persistence.Column;
 import java.util.Date;
 
 public class Canceled extends AbstractEvent {
@@ -94,4 +93,34 @@ public class Canceled extends AbstractEvent {
     }
 
 
+    @Data
+    public static class WalkEnded extends AbstractEvent {
+
+        private Long id;
+        private String walkStartDate;		// 산책 시작 일시분(실제)
+        private String walkEndDate;			// 산책 종료 일시분(실제)
+        private Long reservedId;			// 예약ID
+        private String userId;				// 회원ID
+        private String dogWalkerId;			// 도그워커ID
+
+        public WalkEnded(){
+            super();
+        }
+
+    }
+
+    @Data
+    public static class WalkStarted extends AbstractEvent {
+
+        private Long id;
+        private String walkStartDate;		// 산책 시작 일시분(실제)
+        private String walkEndDate;			// 산책 종료 일시분(실제)
+        private Long reservedId;			// 예약ID
+        private Long userId;				// 회원ID
+        private Long dogWalkerId;			// 도그워커ID
+
+        public WalkStarted(){
+            super();
+        }
+    }
 }
