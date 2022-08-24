@@ -92,7 +92,7 @@ import javax.validation.Valid;
 		Reservation savedReservation = null;
 
 
-		if(reservationRepository.findById(reservation.getReservedId()).isPresent()) {
+		if (reservationRepository.findById(reservation.getReservedId()).isPresent()) {
 			temp = reservationRepository.findById(reservation.getReservedId());
 			savedReservation = temp.get();
 		}
@@ -101,18 +101,17 @@ import javax.validation.Valid;
 		LocalDateTime currentTime = LocalDateTime.now();
 		currentTime = currentTime.minusHours(-24); // 24시간 전시간
 
-		LocalDateTime startTime = new java.sql.Timestamp( savedReservation.getStartTime().getTime() )
+		LocalDateTime startTime = new java.sql.Timestamp(savedReservation.getStartTime().getTime())
 				.toLocalDateTime();
 
-		if( startTime.isAfter(currentTime) )
-			return new ResponseEntity<>( savedReservation,  HttpStatus.EXPECTATION_FAILED);
-
-		else {
+		if (startTime.isAfter(currentTime)) {
+			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
+		}else {
 			savedReservation.setStatus(status); //상태 업데이트
 			reservationService.save(savedReservation);
-			return new ResponseEntity<Reservation>(savedReservation,   HttpStatus.OK);
 		}
 
+		return new ResponseEntity<Reservation>(savedReservation, HttpStatus.OK);
 
 	}
 
