@@ -2,7 +2,8 @@ package petfriends;
 
 import petfriends.config.KafkaProcessor;
 import petfriends.reservation.dto.Payed;
-import petfriends.reservation.dto.Canceled;
+import petfriends.reservation.dto.WalkEnded;
+import petfriends.reservation.dto.WalkStarted;
 import petfriends.reservation.model.Reservation;
 import petfriends.reservation.model.ReservationStatus;
 import petfriends.reservation.repository.ReservationRepository;
@@ -28,32 +29,48 @@ public class PolicyHandler{
     {
         if(payed.isMe()){
             Optional<Reservation> reservationOptional = reservationRepository.findById(payed.getReservedId());
-            Reservation reservation = reservationOptional.get();
-            reservation.setStatus(ReservationStatus.PAYED); // 예약취소
-            reservationRepository.save(reservation);
+
+            if(reservationOptional.isPresent()) {
+                Reservation reservation = reservationOptional.get();
+                reservation.setStatus(ReservationStatus.PAYED);
+                reservationRepository.save(reservation);
+            }else{
+                new RuntimeException("결재완료에 해당하는 예약 번호가 존재하지 않습니다.");
+            }
         }
     }
 
     // 산책 시작
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverWalkStarted_(@Payload Canceled.WalkStarted walkStarted)
+    public void wheneverWalkStarted_(@Payload WalkStarted walkStarted)
     {
         if(walkStarted.isMe()){
             Optional<Reservation> reservationOptional = reservationRepository.findById(walkStarted.getReservedId());
-            Reservation reservation = reservationOptional.get();
-            reservation.setStatus(ReservationStatus.START); // 산책시작
-            reservationRepository.save(reservation);
+            if(reservationOptional.isPresent()) {
+                Reservation reservation = reservationOptional.get();
+                reservation.setStatus(ReservationStatus.START); // 산책시작
+                reservationRepository.save(reservation);
+            }else{
+                new RuntimeException("산책 시작에 해당하는 예약 번호가 존재하지 않습니다.");
+
+            }
         }
     }
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverWalkEnded_(@Payload Canceled.WalkEnded walkEnded)
+    public void wheneverWalkEnded_(@Payload WalkEnded walkEnded)
     {
         if(walkEnded.isMe()){
             Optional<Reservation> reservationOptional = reservationRepository.findById(walkEnded.getReservedId());
-            Reservation reservation = reservationOptional.get();
-            reservation.setStatus(ReservationStatus.END); // 산책종료
-            reservationRepository.save(reservation);
+
+            if(reservationOptional.isPresent()) {
+                Reservation reservation = reservationOptional.get();
+                reservation.setStatus(ReservationStatus.END); // 산책종료
+                reservationRepository.save(reservation);
+            }else{
+                new RuntimeException("산책완료에 해당하는 예약 번호가 존재하지 않습니다.");
+
+            }
         }
     }
 }
