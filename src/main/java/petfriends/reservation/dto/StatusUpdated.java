@@ -22,7 +22,7 @@ public class StatusUpdated extends AbstractEvent {
 
     private Long dogwalkerScheduleId;
 
-    private String status; // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-예약취소
+    private ReservationStatus status; // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-예약취소
 
     private String userId;
 
@@ -69,11 +69,11 @@ public class StatusUpdated extends AbstractEvent {
         this.dogwalkerScheduleId = dogwalkerScheduleId;
     }
 
-    public String getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReservationStatus status) {
         this.status = status;
     }
 

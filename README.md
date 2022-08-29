@@ -26,7 +26,7 @@ upd_date DATETIME
  
 insert샘플:
 insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name) 
-values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 1, "mimi_id", "mimi",  40000, "REQUEST", "geny_id", "geny");
+values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 5, "kiki_id", "kiki",  40000, "REQUEST", "hihi_id", "hihi");
 
 insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name)
 values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 2, "jaekie_id", "jaekie",  80000, "REQUEST", "soya95", "soya");
@@ -40,20 +40,18 @@ insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id
 2. 배포 방법
 ---------------------------------------------------  
 ec2에 reservation 테이블 만들기, 데이터 insert 
-git git clone https://github.com/petFrineds/Reservation.git
+git clone https://github.com/petFrineds/Reservation.git
 mvn install
 aws ecr create-repository --repository-name reservation-backend -- image-scanning-configuration scanOnPush=true --region ${AWS_REGION}
-docker build -t reservation-backend . -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul
-docker run ... -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul ...
-
+docker build -t reservation-backend .
 docker tag reservation-backend:latest 811288377093.dkr.ecr.$AWS_REGION.amazonaws.com/reservation-backend:latest
 docker push 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 811288377093.dkr.ecr.us-west-2.amazonaws.com/
 cd manifests
 -- 여기서 부터는 ec2-user 사경
-kubectl apply -f reservation-deployment.yaml
+kubectl apply -f manifests/reservation-deployment.yaml
 kubectl get deploy
-kubectl apply -f reservation-service.yaml
+kubectl apply -f manifests/reservation-service.yaml
 kubectl get service
 kubectl get ingress
 
