@@ -3,14 +3,12 @@ package petfriends.reservation.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.asn1.cms.TimeStampAndCRL;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PatchMapping;
 import petfriends.ReservationApplication;
 import petfriends.reservation.dto.Created;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -24,11 +22,11 @@ public class Reservation {
     @Column(name="id")
     private Long reservedId;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name = "start_time")
 	private Date startTime;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name = "end_time")
 	private Date endTime;
 
@@ -45,6 +43,7 @@ public class Reservation {
     private String dogwalkerName;
 
     @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status; // 1-요청중, 2-결재완료, 3-산책시작, 4-산책종료, 5-포인트지급, 10-결재취소
 
 	@Column(name="user_id")
@@ -74,10 +73,6 @@ public class Reservation {
 
     @PostUpdate
     public void onPostUpdate(){
-//        StatusUpdated statusUpdated = new StatusUpdated();
-//        BeanUtils.copyProperties(this, statusUpdated);
-//        statusUpdated.publishAfterCommit();
-
 
         log.info("!!!!!!!!!!!!!!!!!onPostUpdate1 --> " + this.getReservedId().toString() + " // " + this.getStatus());
 
@@ -88,5 +83,6 @@ public class Reservation {
                     .doPayment(reservedId);
         }
     }
+
 
 }

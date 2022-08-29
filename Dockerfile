@@ -1,7 +1,6 @@
 FROM alpine
 RUN apk update
 RUN apk add busybox-extras
-ENV TZ Asia/Seoul
 FROM openjdk:8-jdk
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar

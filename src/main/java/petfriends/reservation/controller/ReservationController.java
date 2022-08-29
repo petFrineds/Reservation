@@ -36,8 +36,9 @@ import javax.validation.Valid;
 	 ReservationRepository reservationRepository;
 
 	 @GetMapping("/reservations")
-	 public List<Reservation> findAll() {
-		return reservationService.findAll();
+	 public ResponseEntity<List<Reservation>> findAll() {
+		 List<Reservation> reservations = reservationService.findAll();
+		return new ResponseEntity<List<Reservation>>( reservations, HttpStatus.OK);
 	 }
 
 

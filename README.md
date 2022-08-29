@@ -15,7 +15,7 @@ dogwalker_id NVARCHAR(50) NULL,
 dogwalker_name NVARCHAR(50) NULL,
 
 amount DOUBLE NULL DEFAULT NULL,
-status INT(20) NOT NULL DEFAULT '1',
+status NVARCHAR(20) NOT NULL DEFAULT 'REQUEST',
 
 user_id NVARCHAR(50) NOT NULL,
 user_name NVARCHAR(50) NOT NULL,
@@ -26,10 +26,10 @@ upd_date DATETIME
  
 insert샘플:
 insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name) 
-values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 1, "mimi_id", "mimi",  40000, 0, "geny_id", "geny");
+values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 1, "mimi_id", "mimi",  40000, "REQUEST", "geny_id", "geny");
 
 insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name)
-values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 1, "mimi_id", "mimi",  80000, 0, "soya95", "soya");
+values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 2, "jaekie_id", "jaekie",  80000, "REQUEST", "soya95", "soya");
 
 
 insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values 

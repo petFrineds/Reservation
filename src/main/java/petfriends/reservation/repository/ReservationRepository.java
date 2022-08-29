@@ -10,7 +10,6 @@ import petfriends.reservation.model.Reservation;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findAllByUserId(String userId);
-
     Optional<Reservation> findById(Long id);
 
 
