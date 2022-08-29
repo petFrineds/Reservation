@@ -43,3 +43,8 @@ spec:
                 secretKeyRef :
                   name : db-secrets
                   key :  password
+            - name: KAFKA_HOST_NAME   # Setting Kafka host address from configMap
+              valueFrom :
+                configMapKeyRef :
+                  name : kafka-config
+                  key :  host                   
