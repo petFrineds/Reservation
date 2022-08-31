@@ -49,7 +49,7 @@ logging:
 
 api:
   url:
-    payment: http://localhost:8084
+    payment: http://localhost:8081
 
 
 ---

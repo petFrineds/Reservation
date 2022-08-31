@@ -13,7 +13,7 @@ public class Payed extends AbstractEvent {
     private String userId;
     private String userName;
     private PayType payType;
-    private PayGubun payGubun;
+    private String refundYn;
     private String cardNumber;
     private Double amount;
     private Timestamp payDate;

@@ -29,7 +29,7 @@ insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_
 values ("2022-08-22 19:00:00", "2022-08-22 21:00:00", 5, "kiki_id", "kiki",  40000, "REQUEST", "hihi_id", "hihi");
 
 insert into reservation (start_time, end_time, dogwalker_schedule_id, dogwalker_id, dogwalker_name, amount, status, user_id, user_name)
-values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 2, "jaekie_id", "jaekie",  80000, "REQUEST", "soya95", "soya");
+values ("2022-08-22 21:00:00", "2022-08-22 23:00:00", 2, "jaekie_id", "jaekie",  80000, "REQUEST", "wjdwjd95", "wjdwjd95");
 
 
 insert into payment (pay_id, amount, pay_date, refund_date, reserved_id, user_id) values 
