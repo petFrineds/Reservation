@@ -106,21 +106,25 @@ import javax.validation.Valid;
 			log.info("2. find By Id is Present >>>> DogwalkerId = " + savedReservation.getDogwalkerId());
 		}
 
-		// 시간 변환
-		LocalDateTime currentTime = LocalDateTime.now();
-		currentTime = currentTime.minusHours(-24); // 24시간 전시간
+//		// 시간 변환
+//		LocalDateTime currentTime = LocalDateTime.now();
+//		currentTime = currentTime.minusHours(-24); // 24시간 전시간
+//
+//		LocalDateTime startTime = new java.sql.Timestamp(savedReservation.getStartTime().getTime())
+//				.toLocalDateTime();
+//
+//		if (startTime.isAfter(currentTime)) {
+//			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
+//		}else {
+//			log.info("3. 24시간 이내 아님!  ");
+//			savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
+//			reservationService.save(savedReservation);
+//			log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
+//		}
 
-		LocalDateTime startTime = new java.sql.Timestamp(savedReservation.getStartTime().getTime())
-				.toLocalDateTime();
-
-		if (startTime.isAfter(currentTime)) {
-			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
-		}else {
-			log.info("3. 24시간 이내 아님!  ");
-			savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
-			reservationService.save(savedReservation);
-			log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
-		}
+		savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
+		reservationService.save(savedReservation);
+		log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
 
 		return new ResponseEntity<Reservation>(savedReservation, HttpStatus.OK);
 
