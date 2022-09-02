@@ -95,8 +95,8 @@ import javax.validation.Valid;
 		Reservation savedReservation = null;
 
 
-		if (reservationRepository.findById(reservation.getReservedId()).isPresent()) {
-			temp = reservationRepository.findById(reservation.getReservedId());
+		if (reservationRepository.findById(id).isPresent()) {
+			temp = reservationRepository.findById(id);
 			savedReservation = temp.get();
 		}
 
