@@ -51,6 +51,38 @@ api:
   url:
     payment: http://localhost:8081
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:  # 기본 config 명
+        registerHealthIndicator: true
+        slidingWindowType: TIME_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10  # 최소한 호출을 10번을 기록해야 실패 비율을 계산할 수 있다.
+        slowCallRateThreshold: 100
+        slowCallDurationThreshold: 60000
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 10
+        eventConsumerBufferSize: 10
+        waitDurationInOpenState: 100  # 서킷의 상태가 Open 에서 Half-open 으로 변경되기전에 Circuit Break가 기다리는 시간 ms
+    instances:
+      venhMsa:
+        baseConfig: default
+      reservation:
+        baseConfig: default
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
 
 ---
 

@@ -55,16 +55,20 @@ kubectl apply -f manifests/reservation-service.yaml
 kubectl get service
 kubectl get ingress
 
---------------------------------------------------  
-3. Payment(mariadb), Shop(hsqldb) 실행 및 테스트  
---------------------------------------------------  
-1) Payment에서 아래와 같이 api 통해 데이터 생성하면, mariadb[payment테이블]에 데이터 저장되고, message publish.  
-    - 데이터생성(postman사용) : POST http://localhost:8082/payments/   
-                              { "reservedId": "202203271311", "userId": "soya95", "amount": "10000", "payDate": "2019-03-10 10:22:33.102" }  
+3. circuit breaker 테스트
+   
+   //적용된 api
+   @GetMapping("/reservations/circuitbreaker/payments/{param}")
 
-    - 조회 : GET http://localhost:8082/payments/1  
+   //적용안된 api
+   @GetMapping("/reservations/circuitbreaker/no/payments/{param}")
+ 
+   //호출되는 payment 서비스의 api 
+   @RequestMapping(method= RequestMethod.GET, path="/payments/message/{param}")
+    public String getUserPayments(@PathVariable String param);
 
-3) Shop에서 message 받아와 저장 ( 아래 PloycyHandler.java가 실행됨 )  
+4. hpa 테스트
+   @RequestMapping(value = "/reservations/hpa", method = RequestMethod.GET)
 
 --------------------------------------------------  
 4. 구조   

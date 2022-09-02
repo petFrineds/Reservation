@@ -14,4 +14,7 @@ public interface PaymentService {
     @RequestMapping(method= RequestMethod.PUT, path="/payments/{id}")
     public void doPayment(@PathVariable String id);
 
+
+    @RequestMapping(method= RequestMethod.GET, path="/payments/message/{param}")
+    public String getUserPayments(@PathVariable String param);
 }

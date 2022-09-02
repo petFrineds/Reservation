@@ -1,5 +1,7 @@
 package petfriends.reservation.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -116,6 +118,23 @@ import javax.validation.Valid;
 
 	}
 
- }
+
+	@RequestMapping(value = "/reservations/hpa", method = RequestMethod.GET)
+	public String helloWordforHPA(){
+		double x = 0.0001;
+		String hostname = "";
+		for(int i=0; i<=10000000; i++){
+			x+=Math.sqrt(x);
+		}
+		try{
+			hostname = InetAddress.getLocalHost().getHostName();
+		}catch(UnknownHostException e){
+			e.printStackTrace();
+		}
+		return "HPA Test (" + hostname + ")\n";
+	}
+
+
+}
 
  

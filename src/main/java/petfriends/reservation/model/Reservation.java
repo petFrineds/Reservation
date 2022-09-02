@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PatchMapping;
 import petfriends.ReservationApplication;
 import petfriends.reservation.dto.Created;
 
@@ -70,7 +69,6 @@ public class Reservation {
         log.info("!!!!!!!!!!!!!!!!!onPostPersist --> " + this.getReservedId().toString() + " // " + this.getStatus());
 
     }
-
     @PostUpdate
     public void onPostUpdate(){
 
@@ -84,5 +82,8 @@ public class Reservation {
         }
     }
 
+    private String getCircuitBreakerFallback(Throwable t) {
+        return "getCircuitBreakerFallback! exception type: " + t.getClass() + "exception, message: " + t.getMessage();
+    }
 
 }
