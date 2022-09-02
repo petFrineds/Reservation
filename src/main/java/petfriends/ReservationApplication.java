@@ -9,7 +9,7 @@ import petfriends.config.KafkaProcessor;
 
 
 @SpringBootApplication
-@EnableBinding(KafkaProcessor.class)
+//@EnableBinding(KafkaProcessor.class)
 @EnableFeignClients
 public class ReservationApplication {
     public static ApplicationContext applicationContext;

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import jdk.jfr.Timestamp;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +31,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/")
+@Slf4j
  public class ReservationController {
 
 	 @Autowired
@@ -94,10 +97,13 @@ import javax.validation.Valid;
 		//ReservationStatus status = reservation.getStatus();
 		Reservation savedReservation = null;
 
+		log.info("1. PATCH >>>> Reserved Id = " + id);
 
 		if (reservationRepository.findById(id).isPresent()) {
 			temp = reservationRepository.findById(id);
 			savedReservation = temp.get();
+
+			log.info("2. find By Id is Present >>>> DogwalkerId = " + savedReservation.getDogwalkerId());
 		}
 
 		// 시간 변환
@@ -110,8 +116,10 @@ import javax.validation.Valid;
 		if (startTime.isAfter(currentTime)) {
 			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
 		}else {
+			log.info("3. 24시간 이내 아님!  ");
 			savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
 			reservationService.save(savedReservation);
+			log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
 		}
 
 		return new ResponseEntity<Reservation>(savedReservation, HttpStatus.OK);
