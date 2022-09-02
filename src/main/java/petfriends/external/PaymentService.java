@@ -15,6 +15,9 @@ public interface PaymentService {
     public void doPayment(@PathVariable String id);
 
 
+    @RequestMapping(method= RequestMethod.GET, path="/payments/sleep/{param}")
+    public String testPaymentSleep(@PathVariable String param);
+
     @RequestMapping(method= RequestMethod.GET, path="/payments/message/{param}")
-    public String getUserPayments(@PathVariable String param);
+    public String testPaymentMessage(@PathVariable String param);
 }

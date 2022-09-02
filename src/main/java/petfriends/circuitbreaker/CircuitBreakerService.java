@@ -18,13 +18,24 @@ public class CircuitBreakerService {
     private static final String CIRCUIT_INSTANCE = "venhMsa";
 
     @CircuitBreaker(name = CIRCUIT_INSTANCE, fallbackMethod = "getCircuitBreakerFallback")
-    public String getCircuitBreaker(String param) {
-        String message = paymentService.getUserPayments(param);
+    public String testSleepWithCircuitBreaker(String param) {
+        String message = paymentService.testPaymentSleep(param);
         return message;
     }
 
-    public String getNoCircuitBreak(String param) {
-        String message = paymentService.getUserPayments(param);
+    public String testSleepWithNoCircuitBreaker(String param) {
+        String message = paymentService.testPaymentSleep(param);
+        return message;
+    }
+
+    @CircuitBreaker(name = CIRCUIT_INSTANCE, fallbackMethod = "getCircuitBreakerFallback")
+    public String testMessageWithCircuitBreaker(String param) {
+        String message = paymentService.testPaymentMessage(param);
+        return message;
+    }
+
+    public String testMessageWithNoCircuitBreaker(String param) {
+        String message = paymentService.testPaymentMessage(param);
         return message;
     }
 

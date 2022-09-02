@@ -91,7 +91,7 @@ import javax.validation.Valid;
 
 		Optional<Reservation> temp;
 
-		ReservationStatus status = reservation.getStatus();
+		//ReservationStatus status = reservation.getStatus();
 		Reservation savedReservation = null;
 
 
@@ -110,7 +110,7 @@ import javax.validation.Valid;
 		if (startTime.isAfter(currentTime)) {
 			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
 		}else {
-			savedReservation.setStatus(status); //상태 업데이트
+			savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
 			reservationService.save(savedReservation);
 		}
 

@@ -21,14 +21,24 @@ public class CircuitBreakerController {
         return "VehnMsa Param" + param;
     }
 
-    @GetMapping("/reservations/circuitbreaker/payments/{param}")
-    public String getVenhMsaSupport(@PathVariable String param){
-        return circuitBreakerService.getCircuitBreaker(param);
+    @GetMapping("/reservations/cb/sleep/{param}")
+    public String testCircuitWithSleep(@PathVariable String param){
+        return circuitBreakerService.testSleepWithCircuitBreaker(param);
     }
 
-    @GetMapping("/reservations/circuitbreaker/no/payments/{param}")
-    public String getVenhMsaSupportFail(@PathVariable String param){
-        return circuitBreakerService.getNoCircuitBreak(param);
+    @GetMapping("/reservations/cb/no/sleep/{param}")
+    public String testNoCircuitWithSleep(@PathVariable String param){
+        return circuitBreakerService.testSleepWithNoCircuitBreaker(param);
+    }
+
+    @GetMapping("/reservations/cb/exception/{param}")
+    public String testCircuitWithException(@PathVariable String param){
+        return circuitBreakerService.testMessageWithCircuitBreaker(param);
+    }
+
+    @GetMapping("/reservations/cb/no/exception/{param}")
+    public String testNoCircuitWithException(@PathVariable String param){
+        return circuitBreakerService.testMessageWithNoCircuitBreaker(param);
     }
 
 

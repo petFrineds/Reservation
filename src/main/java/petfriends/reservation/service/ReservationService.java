@@ -43,7 +43,7 @@ public class ReservationService {
 			 reservation.setRegDate( java.sql.Timestamp.valueOf(current) );
 
 		 if(reservation.getUpdDate() == null)
-			 reservation.setRegDate( java.sql.Timestamp.valueOf(current) );
+			 reservation.setUpdDate( java.sql.Timestamp.valueOf(current) );
 
 		return reservationRepository.save(reservation);
 	}
