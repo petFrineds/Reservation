@@ -17,12 +17,20 @@ spec:
         - name: reservation-backend
           image: 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
           imagePullPolicy: Always
+          #hpa 적용을 위한 resource 설정 추가
+          resources:
+            requests:
+              cpu: 5m
+              memory: 200M
+            limits:
+              cpu: 20m
+              memory: 200M
+          #여기까지
           ports:
             - containerPort: 8080
           env:
             - name: DATE
               value: 'DATE_STRING'
-          env:   # Setting Enviornmental Variables
             - name: HOST_NAME   # Setting Database host address from configMap
               valueFrom :
                 configMapKeyRef :
