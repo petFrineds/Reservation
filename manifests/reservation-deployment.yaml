@@ -17,15 +17,13 @@ spec:
         - name: reservation-backend
           image: 811288377093.dkr.ecr.us-west-2.amazonaws.com/reservation-backend:latest
           imagePullPolicy: Always
-          #hpa 적용을 위한 resource 설정 추가
+          #hpa 설정 추가 
           resources:
             requests:
-              cpu: 5m
-              memory: 200M
+              cpu: "2"
             limits:
-              cpu: 20m
-              memory: 200M
-          #여기까지
+              cpu: "4"
+          
           ports:
             - containerPort: 8080
           env:
