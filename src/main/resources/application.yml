@@ -108,7 +108,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: ${KAFKA_HOST_NAME}:9092
+          brokers: ${HOST_NAME}:9092
         streams:
           binder:
             configuration:
