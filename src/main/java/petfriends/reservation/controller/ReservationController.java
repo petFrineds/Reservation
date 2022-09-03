@@ -147,6 +147,13 @@ import javax.validation.Valid;
 	}
 
 
+	@DeleteMapping("/reservations/{id}")
+	public HttpStatus deleteReservation(@PathVariable("id") Long id){
+		reservationRepository.deleteById(id);
+
+		return HttpStatus.OK;
+	}
+
 }
 
  
