@@ -139,4 +139,11 @@ api:
     walk: http://walk-backend:8080
     dogwalkerSchedule: http://dogwalkerSchedule-backend:8080
 
+  application:
+    name: Reservation
+  sleuth:
+    sampler:
+      probability: 1.0
+    zipkin:
+      base-url: http://34.219.82.75:9411/
 
