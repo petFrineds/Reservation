@@ -91,14 +91,14 @@ import javax.validation.Valid;
 
 	@Transactional
 	@RequestMapping(value = "/reservations/{id}", method = RequestMethod.PATCH)
-	public ResponseEntity<Reservation> patchReservation(@RequestHeader Map<String, Object> requestHeader,
+	public ResponseEntity<Reservation> patchReservation(@RequestHeader(value="Authorization") String token,
 														@PathVariable("id") final Long id,
 												  @RequestBody final Reservation reservation) {
 
 		Optional<Reservation> temp;
 		Reservation savedReservation = null;
 
-		String token = requestHeader.get("Authorization").toString();
+		//String token = requestHeader.get("Authorization").toString();
 
 		log.info("1. PATCH >>>> Reserved Id = " + id);
 
@@ -108,6 +108,8 @@ import javax.validation.Valid;
 
 			log.info("2. find By Id is Present >>>> DogwalkerId = " + savedReservation.getDogwalkerId());
 		}
+
+		log.info("3. TOKEN >>>>  " +  token);
 
 		savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
 		savedReservation.setToken(token);
