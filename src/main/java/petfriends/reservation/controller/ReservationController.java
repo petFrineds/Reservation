@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import jdk.jfr.Timestamp;
@@ -79,23 +80,25 @@ import javax.validation.Valid;
 
 		Reservation savedReservation = reservationService.save(reservation);
 
-		final HttpHeaders headers = new HttpHeaders();
+//		final HttpHeaders headers = new HttpHeaders();
+//
+//		headers.setLocation(ucBuilder.path("/reservations/{id}")
+//				.buildAndExpand(savedReservation.getReservedId()).toUri());
 
-		headers.setLocation(ucBuilder.path("/reservations/{id}")
-				.buildAndExpand(savedReservation.getReservedId()).toUri());
-
-		return new ResponseEntity<Reservation>(headers, HttpStatus.CREATED);
+		//예약 전체 넘기는 걸로 변경
+		return new ResponseEntity<Reservation>(savedReservation, HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(value = "/reservations/{id}", method = RequestMethod.PATCH)
-	public ResponseEntity<Reservation> patchReservation(@PathVariable("id") final Long id,
+	public ResponseEntity<Reservation> patchReservation(@RequestHeader Map<String, Object> requestHeader,
+														@PathVariable("id") final Long id,
 												  @RequestBody final Reservation reservation) {
 
 		Optional<Reservation> temp;
-
-		//ReservationStatus status = reservation.getStatus();
 		Reservation savedReservation = null;
+
+		String token = requestHeader.get("Authorization").toString();
 
 		log.info("1. PATCH >>>> Reserved Id = " + id);
 
@@ -106,23 +109,8 @@ import javax.validation.Valid;
 			log.info("2. find By Id is Present >>>> DogwalkerId = " + savedReservation.getDogwalkerId());
 		}
 
-//		// 시간 변환
-//		LocalDateTime currentTime = LocalDateTime.now();
-//		currentTime = currentTime.minusHours(-24); // 24시간 전시간
-//
-//		LocalDateTime startTime = new java.sql.Timestamp(savedReservation.getStartTime().getTime())
-//				.toLocalDateTime();
-//
-//		if (startTime.isAfter(currentTime)) {
-//			new RuntimeException("24 시간 이내에는 취소가 불가능합니다.");
-//		}else {
-//			log.info("3. 24시간 이내 아님!  ");
-//			savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
-//			reservationService.save(savedReservation);
-//			log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
-//		}
-
 		savedReservation.setStatus(ReservationStatus.CANCEL); //상태 업데이트
+		savedReservation.setToken(token);
 		reservationService.save(savedReservation);
 		log.info("4. 현 상태 >>>>  = " + savedReservation.getStatus());
 

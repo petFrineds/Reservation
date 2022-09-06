@@ -59,6 +59,9 @@ public class Reservation {
     @Column(name="upd_date")
     private Date updDate;
 
+    @Transient
+    private String token;
+
     @PostPersist
     public void onPostPersist(){
 
@@ -77,8 +80,10 @@ public class Reservation {
         if(this.getStatus() == ReservationStatus.CANCEL) { //예약취소일때
             log.info("!!!!!!!!!!!!!!!!!onPostUpdate2 --> " + this.getReservedId().toString() + " // " + this.getStatus());
             String reservedId = this.getReservedId().toString();
+            String token = this.getToken();
+            log.info("!!!!!!!!!!!!!!!!!onPostUpdate3 Token --> " + this.getToken() );
             ReservationApplication.applicationContext.getBean(petfriends.external.PaymentService.class)
-                    .doPayment(reservedId);
+                    .doPayment(token, reservedId);
         }
     }
 
